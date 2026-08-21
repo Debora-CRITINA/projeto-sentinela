@@ -186,9 +186,8 @@ app.get("/medicacoes", (req, res) => {
   res.json(db.consultas);
 });
 
-// START
-const PORT = process.env.PORT
-          || 3000;
-app.listen(PORT , () => {
-  console.log(`Porta ${Port}´);
-  }); 
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
