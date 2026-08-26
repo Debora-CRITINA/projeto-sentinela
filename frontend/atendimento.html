@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atendimento</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,43 +9,21 @@
 <div class="container">
     <h2>Atendimento</h2>
 
-    <input id="nome" type="text" placeholder="Nome">
-
-    <input id="cpf" type="text" placeholder="CPF">
+    <input id="nome" placeholder="Nome">
+    <input id="cpf" placeholder="CPF">
+    <input id="dataNascimento" placeholder="DataNascimento">
+    <input id="sexo" placeholder="Sexo">
+    <input id="nomeResponsavel" placeholder="NomeResponsavel">
+    <input id="estadoCivil" placeholder="EstadoCivil">
+    <input id="endereco" placeholder="Endereco">
+    <input id="telefone" placeholder="Telefone">
+    <input id="email" placeholder="Email">
+    <input id="contatoEmergencia" placeholder="ContatoEmergencia">
 
     <select id="tipo">
-        <option value="">Selecione o tipo</option>
-        <option value="Convenio">Convênio</option>
-        <option value="Particular">Particular</option>
+        <option>Convenio</option>
+        <option>Particular</option>
     </select>
-
-    <input id="dataNascimento" type="date">
-
-    <select id="sexo">
-        <option value="">Selecione o sexo</option>
-        <option value="Feminino">Feminino</option>
-        <option value="Masculino">Masculino</option>
-        <option value="Outro">Outro</option>
-    </select>
-
-    <input id="nomeResponsavel" type="text" placeholder="Nome do responsável">
-
-    <select id="estadoCivil">
-        <option value="">Selecione o estado civil</option>
-        <option value="Solteiro">Solteiro(a)</option>
-        <option value="Casado">Casado(a)</option>
-        <option value="Divorciado">Divorciado(a)</option>
-        <option value="Viúvo">Viúvo(a)</option>
-        <option value="Outro">Outro</option>
-    </select>
-
-    <input id="endereco" type="text" placeholder="Endereço">
-
-    <input id="telefone" type="tel" placeholder="Telefone">
-
-    <input id="email" type="email" placeholder="E-mail">
-
-    <input id="contatoEmergencia" type="text" placeholder="Contato de emergência">
 
     <input type="file" id="foto">
 
@@ -57,43 +32,27 @@
 
 <script>
 function cadastrar() {
-
-    fetch("/atendimento", {
+    fetch("http://localhost:3000/atendimento", {
         method: "POST",
-
         headers: {
             "Content-Type": "application/json"
         },
-
         body: JSON.stringify({
-            nome: document.getElementById("nome").value,
-            cpf: document.getElementById("cpf").value,
-            tipo: document.getElementById("tipo").value,
-            dataNascimento: document.getElementById("dataNascimento").value,
-            sexo: document.getElementById("sexo").value,
-            nomeResponsavel: document.getElementById("nomeResponsavel").value,
-            estadoCivil: document.getElementById("estadoCivil").value,
-            endereco: document.getElementById("endereco").value,
-            telefone: document.getElementById("telefone").value,
-            email: document.getElementById("email").value,
-            contatoEmergencia: document.getElementById("contatoEmergencia").value
+            nome: nome.value,
+            cpf: cpf.value,
+            tipo: tipo.value
+            dataNascimento: dataNascimento.value,
+            sexo: sexo.value,
+            nomeResponsavel: nomeResponsavel.value,
+            estadoCivil: estadoCivil.value,
+            endereco: endereco.value,
+            telefone: telefone.value,
+            email: email.value,
+            contatoEmergencia: contatoEmergencia.value
         })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Erro ao cadastrar paciente");
-        }
-
-        return response.json();
-    })
-    .then(data => {
-        alert("Paciente enviado para triagem!");
-        console.log(data);
-    })
-    .catch(error => {
-        console.error(error);
-        alert("Erro ao enviar o paciente.");
     });
+
+    alert("Paciente enviado para triagem");
 }
 </script>
 
