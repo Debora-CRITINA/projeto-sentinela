@@ -53,13 +53,25 @@ app.post("/login", (req, res) => {
 app.post("/atendimento", (req, res) => {
   const db = readDB();
 
-  const paciente = {
-    id: Date.now(),
-    nome: req.body.nome,
-    cpf: req.body.cpf,
-    tipo: req.body.tipo,
-    status: "triagem",
-    createdAt: new Date()
+ const paciente = {
+  id: Date.now(),
+  nome: req.body.nome,
+  cpf: req.body.cpf,
+  tipo: req.body.tipo,
+
+  dataNascimento: req.body.dataNascimento,
+  sexo: req.body.sexo,
+  nomeResponsavel: req.body.nomeResponsavel,
+  estadoCivil: req.body.estadoCivil,
+  endereco: req.body.endereco,
+  telefone: req.body.telefone,
+  email: req.body.email,
+  contatoEmergencia: req.body.contatoEmergencia,
+
+  status: "triagem",
+  createdAt: new Date()
+};
+
   };
 
   db.pacientes.push(paciente);
