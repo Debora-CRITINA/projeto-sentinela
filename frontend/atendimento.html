@@ -19,16 +19,28 @@
 </div>
 
 <script>
-function cadastrar(){
- fetch("http://localhost:3000/atendimento",{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body: JSON.stringify({
-    nome: nome.value,
-    cpf: cpf.value,
-    tipo: tipo.value
-  })
- });
+function cadastrar() {
+    fetch("http://localhost:3000/atendimento", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nome: nome.value,
+            cpf: cpf.value,
+            tipo: tipo.value,
+            dataNascimento: dataNascimento.value,
+            sexo: sexo.value,
+            nomeResponsavel: nomeResponsavel.value,
+            estadoCivil: estadoCivil.value,
+            endereco: endereco.value,
+            telefone: telefone.value,
+            email: email.value,
+            contatoEmergencia: contatoEmergencia.value
+        })
+    });
+}
+
  alert("Paciente enviado para triagem");
 }
 </script>
