@@ -10,19 +10,44 @@
     <h2>Atendimento</h2>
 
     <input id="nome" placeholder="Nome">
-    <input id="cpf" placeholder="CPF">
-    <input id="dataNascimento" placeholder="DataNascimento">
-    <input id="sexo" placeholder="Sexo">
-    <input id="nomeResponsavel" placeholder="NomeResponsavel">
-    <input id="estadoCivil" placeholder="EstadoCivil">
-    <input id="endereco" placeholder="Endereco">
-    <input id="telefone" placeholder="Telefone">
-    <input id="email" placeholder="Email">
-    <input id="contatoEmergencia" placeholder="ContatoEmergencia">
 
+    <input id="cpf" placeholder="CPF">
+
+    <input id="dataNascimento" type="date">
+
+    <!-- SEXO -->
+    <select id="sexo">
+        <option value="">Selecione o sexo</option>
+        <option value="Feminino">Feminino</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Outro">Outro</option>
+    </select>
+
+    <input id="nomeResponsavel" placeholder="Nome Responsável">
+
+    <!-- ESTADO CIVIL -->
+    <select id="estadoCivil">
+        <option value="">Selecione o estado civil</option>
+        <option value="Solteiro(a)">Solteiro(a)</option>
+        <option value="Casado(a)">Casado(a)</option>
+        <option value="Divorciado(a)">Divorciado(a)</option>
+        <option value="Viúvo(a)">Viúvo(a)</option>
+        <option value="Separado(a)">Separado(a)</option>
+    </select>
+
+    <input id="endereco" placeholder="Endereço">
+
+    <input id="telefone" placeholder="Telefone">
+
+    <input id="email" type="email" placeholder="Email">
+
+    <input id="contatoEmergencia" placeholder="Contato de Emergência">
+
+    <!-- CONVÊNIO -->
     <select id="tipo">
-        <option>Convenio</option>
-        <option>Particular</option>
+        <option value="">Selecione o tipo</option>
+        <option value="Convenio">Convênio</option>
+        <option value="Particular">Particular</option>
     </select>
 
     <input type="file" id="foto">
@@ -32,29 +57,36 @@
 
 <script>
 function cadastrar() {
-   fetch("/atendimento", {
 
+    fetch("/atendimento", {
         method: "POST",
+
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-            nome: document.getElementById('nome').value
-            docum
-            cpf: document.getElementById('nome').value
-            tipo:document.getElementById('nome').value
-            dataNascimento: dataNascimento.value,
-            sexo: sexo.value,
-            nomeResponsavel: nomeResponsavel.value,
-            estadoCivil: estadoCivil.value,
-            endereco: endereco.value,
-            telefone: telefone.value,
-            email: email.value,
-            contatoEmergencia: contatoEmergencia.value
-        })
-    });
 
-    alert("Paciente enviado para triagem");
+        body: JSON.stringify({
+            nome: document.getElementById('nome').value,
+            cpf: document.getElementById('cpf').value,
+            dataNascimento: document.getElementById('dataNascimento').value,
+            sexo: document.getElementById('sexo').value,
+            nomeResponsavel: document.getElementById('nomeResponsavel').value,
+            estadoCivil: document.getElementById('estadoCivil').value,
+            endereco: document.getElementById('endereco').value,
+            telefone: document.getElementById('telefone').value,
+            email: document.getElementById('email').value,
+            contatoEmergencia: document.getElementById('contatoEmergencia').value,
+            tipo: document.getElementById('tipo').value
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Paciente enviado para triagem");
+    })
+    .catch(error => {
+        console.error("Erro:", error);
+        alert("Erro ao cadastrar paciente");
+    });
 }
 </script>
 
