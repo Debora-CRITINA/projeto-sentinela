@@ -1,19 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Atendimento</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div class="container">
+
     <h2>Atendimento</h2>
 
-    <input id="nome" placeholder="Nome">
+    <!-- NOME -->
+    <input
+        id="nome"
+        type="text"
+        placeholder="Nome"
+    >
 
-    <input id="cpf" placeholder="CPF">
+    <!-- CPF -->
+    <input
+        id="cpf"
+        type="text"
+        placeholder="CPF"
+    >
 
-    <input id="dataNascimento" type="date">
+    <!-- DATA DE NASCIMENTO -->
+    <input
+        id="dataNascimento"
+        type="date"
+    >
 
     <!-- SEXO -->
     <select id="sexo">
@@ -23,7 +44,12 @@
         <option value="Outro">Outro</option>
     </select>
 
-    <input id="nomeResponsavel" placeholder="Nome Responsável">
+    <!-- NOME DO RESPONSÁVEL -->
+    <input
+        id="nomeResponsavel"
+        type="text"
+        placeholder="Nome do Responsável"
+    >
 
     <!-- ESTADO CIVIL -->
     <select id="estadoCivil">
@@ -35,30 +61,104 @@
         <option value="Separado(a)">Separado(a)</option>
     </select>
 
-    <input id="endereco" placeholder="Endereço">
+    <!-- ENDEREÇO -->
+    <input
+        id="endereco"
+        type="text"
+        placeholder="Endereço"
+    >
 
-    <input id="telefone" placeholder="Telefone">
+    <!-- TELEFONE -->
+    <input
+        id="telefone"
+        type="text"
+        placeholder="Telefone"
+    >
 
-    <input id="email" type="email" placeholder="Email">
+    <!-- EMAIL -->
+    <input
+        id="email"
+        type="email"
+        placeholder="Email"
+    >
 
-    <input id="contatoEmergencia" placeholder="Contato de Emergência">
+    <!-- CONTATO DE EMERGÊNCIA -->
+    <input
+        id="contatoEmergencia"
+        type="text"
+        placeholder="Contato de Emergência"
+    >
 
-    <!-- CONVÊNIO -->
+    <!-- TIPO DE ATENDIMENTO -->
     <select id="tipo">
         <option value="">Selecione o tipo</option>
         <option value="Convenio">Convênio</option>
         <option value="Particular">Particular</option>
     </select>
 
-    <input type="file" id="foto">
+    <!-- FOTO -->
+    <input
+        type="file"
+        id="foto"
+        accept="image/*"
+    >
 
-    <button onclick="cadastrar()">Cadastrar</button>
+    <!-- BOTÃO -->
+    <button onclick="cadastrar()">
+        Cadastrar
+    </button>
+
 </div>
 
+
 <script>
+
 function cadastrar() {
 
+    // Pegando os valores dos campos
+    const nome = document.getElementById("nome").value;
+    const cpf = document.getElementById("cpf").value;
+    const dataNascimento = document.getElementById("dataNascimento").value;
+    const sexo = document.getElementById("sexo").value;
+    const nomeResponsavel = document.getElementById("nomeResponsavel").value;
+    const estadoCivil = document.getElementById("estadoCivil").value;
+    const endereco = document.getElementById("endereco").value;
+    const telefone = document.getElementById("telefone").value;
+    const email = document.getElementById("email").value;
+    const contatoEmergencia = document.getElementById("contatoEmergencia").value;
+    const tipo = document.getElementById("tipo").value;
+
+
+    // Verifica se os campos principais foram preenchidos
+    if (!nome) {
+        alert("Digite o nome do paciente.");
+        return;
+    }
+
+    if (!cpf) {
+        alert("Digite o CPF.");
+        return;
+    }
+
+    if (!sexo) {
+        alert("Selecione o sexo.");
+        return;
+    }
+
+    if (!estadoCivil) {
+        alert("Selecione o estado civil.");
+        return;
+    }
+
+    if (!tipo) {
+        alert("Selecione o tipo de atendimento.");
+        return;
+    }
+
+
+    // Envia os dados para o servidor
     fetch("/atendimento", {
+
         method: "POST",
 
         headers: {
@@ -66,28 +166,72 @@ function cadastrar() {
         },
 
         body: JSON.stringify({
-            nome: document.getElementById('nome').value,
-            cpf: document.getElementById('cpf').value,
-            dataNascimento: document.getElementById('dataNascimento').value,
-            sexo: document.getElementById('sexo').value,
-            nomeResponsavel: document.getElementById('nomeResponsavel').value,
-            estadoCivil: document.getElementById('estadoCivil').value,
-            endereco: document.getElementById('endereco').value,
-            telefone: document.getElementById('telefone').value,
-            email: document.getElementById('email').value,
-            contatoEmergencia: document.getElementById('contatoEmergencia').value,
-            tipo: document.getElementById('tipo').value
+
+            nome: nome,
+
+            cpf: cpf,
+
+            dataNascimento: dataNascimento,
+
+            sexo: sexo,
+
+            nomeResponsavel: nomeResponsavel,
+
+            estadoCivil: estadoCivil,
+
+            endereco: endereco,
+
+            telefone: telefone,
+
+            email: email,
+
+            contatoEmergencia: contatoEmergencia,
+
+            tipo: tipo
+
         })
+
     })
-    .then(response => response.json())
+
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error("Erro ao cadastrar paciente.");
+        }
+
+        return response.json();
+
+    })
+
     .then(data => {
-        alert("Paciente enviado para triagem");
+
+        alert("Paciente enviado para triagem!");
+
+        // Limpa o formulário
+        document.getElementById("nome").value = "";
+        document.getElementById("cpf").value = "";
+        document.getElementById("dataNascimento").value = "";
+        document.getElementById("sexo").value = "";
+        document.getElementById("nomeResponsavel").value = "";
+        document.getElementById("estadoCivil").value = "";
+        document.getElementById("endereco").value = "";
+        document.getElementById("telefone").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("contatoEmergencia").value = "";
+        document.getElementById("tipo").value = "";
+
     })
+
     .catch(error => {
-        console.error("Erro:", error);
-        alert("Erro ao cadastrar paciente");
+
+        console.error(error);
+
+        alert("Erro ao cadastrar paciente.");
+
     });
+
 }
+
 </script>
 
 </body>
