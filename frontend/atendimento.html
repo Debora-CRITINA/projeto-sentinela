@@ -116,17 +116,21 @@
 function cadastrar() {
 
     // Pegando os valores dos campos
-    const nome = document.getElementById("nome").value;
-    const cpf = document.getElementById("cpf").value;
+    const nome = document.getElementById("nome").value.trim();
+    const cpf = document.getElementById("cpf").value.trim();
     const dataNascimento = document.getElementById("dataNascimento").value;
     const sexo = document.getElementById("sexo").value;
-    const nomeResponsavel = document.getElementById("nomeResponsavel").value;
+    const nomeResponsavel = document.getElementById("nomeResponsavel").value.trim();
     const estadoCivil = document.getElementById("estadoCivil").value;
-    const endereco = document.getElementById("endereco").value;
-    const telefone = document.getElementById("telefone").value;
-    const email = document.getElementById("email").value;
-    const contatoEmergencia = document.getElementById("contatoEmergencia").value;
+    const endereco = document.getElementById("endereco").value.trim();
+    const telefone = document.getElementById("telefone").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const contatoEmergencia = document.getElementById("contatoEmergencia").value.trim();
     const tipo = document.getElementById("tipo").value;
+
+    // Pega a foto selecionada
+    const fotoInput = document.getElementById("foto");
+    const foto = fotoInput.files[0];
 
 
     // Verifica se os campos principais foram preenchidos
@@ -156,40 +160,38 @@ function cadastrar() {
     }
 
 
+    // Cria o formulário para enviar texto + foto
+    const formData = new FormData();
+
+    formData.append("nome", nome);
+    formData.append("cpf", cpf);
+    formData.append("dataNascimento", dataNascimento);
+    formData.append("sexo", sexo);
+    formData.append("nomeResponsavel", nomeResponsavel);
+    formData.append("estadoCivil", estadoCivil);
+    formData.append("endereco", endereco);
+    formData.append("telefone", telefone);
+    formData.append("email", email);
+    formData.append("contatoEmergencia", contatoEmergencia);
+    formData.append("tipo", tipo);
+
+    // Só adiciona a foto se uma tiver sido selecionada
+    if (foto) {
+        formData.append("foto", foto);
+    }
+
+
     // Envia os dados para o servidor
     fetch("/atendimento", {
 
         method: "POST",
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+        // IMPORTANTE:
+        // Não colocar Content-Type aqui.
+        // O navegador configura automaticamente o multipart/form-data
+        // por causa do FormData.
 
-        body: JSON.stringify({
-
-            nome: nome,
-
-            cpf: cpf,
-
-            dataNascimento: dataNascimento,
-
-            sexo: sexo,
-
-            nomeResponsavel: nomeResponsavel,
-
-            estadoCivil: estadoCivil,
-
-            endereco: endereco,
-
-            telefone: telefone,
-
-            email: email,
-
-            contatoEmergencia: contatoEmergencia,
-
-            tipo: tipo
-
-        })
+        body: formData
 
     })
 
@@ -207,6 +209,7 @@ function cadastrar() {
 
         alert("Paciente enviado para triagem!");
 
+
         // Limpa o formulário
         document.getElementById("nome").value = "";
         document.getElementById("cpf").value = "";
@@ -219,6 +222,9 @@ function cadastrar() {
         document.getElementById("email").value = "";
         document.getElementById("contatoEmergencia").value = "";
         document.getElementById("tipo").value = "";
+
+        // Limpa também a foto
+        document.getElementById("foto").value = "";
 
     })
 
