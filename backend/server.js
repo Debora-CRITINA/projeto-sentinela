@@ -72,7 +72,7 @@ app.post("/atendimento", (req, res) => {
   createdAt: new Date()
 };
 
-  };
+  
 
   db.pacientes.push(paciente);
   writeDB(db);
