@@ -4,62 +4,584 @@
 <meta charset="UTF-8">
 <title>Triagem</title>
 <link rel="stylesheet" href="style.css">
-<style>
-  .btn-tv {
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-left: 8px;
-  }
-  .btn-tv:hover { background: #1e7e34; }
 
-  .pacientes-fila {
-    margin-bottom: 30px;
-    background: #f0f4ff;
-    border-radius: 8px;
-    padding: 16px;
-    border: 1px solid #d0d8f0;
+<style>
+/* =========================================================
+   SISTEMA HOSPITALAR PREMIUM — TELA DE TRIAGEM
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 40px 20px;
+
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+
+  background:
+    radial-gradient(circle at 10% 10%, rgba(0, 188, 212, .10), transparent 28%),
+    radial-gradient(circle at 90% 90%, rgba(25, 118, 210, .10), transparent 30%),
+    linear-gradient(135deg, #061421 0%, #0b2033 50%, #071521 100%);
+
+  color: #243746;
+}
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.container {
+  position: relative;
+
+  width: 100%;
+  max-width: 1050px;
+
+  margin: 0 auto;
+  padding: 34px;
+
+  background: rgba(255, 255, 255, .97);
+
+  border: 1px solid rgba(255, 255, 255, .8);
+  border-radius: 22px;
+
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, .30),
+    0 8px 25px rgba(0, 0, 0, .12);
+
+  animation: entrada .5s ease-out;
+}
+
+/* Barra premium no topo */
+.container::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 130px;
+  height: 4px;
+
+  background: linear-gradient(
+    90deg,
+    #00acc1,
+    #26c6da,
+    #1976d2
+  );
+
+  border-radius: 0 0 10px 10px;
+}
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.container > div:first-child {
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e6edf2;
+}
+
+.container h2 {
+  color: #102a43 !important;
+
+  font-size: 25px;
+  font-weight: 700;
+
+  letter-spacing: -.4px;
+}
+
+/* Botão TV */
+.btn-abrir-tv {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+
+  padding: 0 18px !important;
+
+  background: linear-gradient(
+    135deg,
+    #087f9c,
+    #176fc1
+  ) !important;
+
+  border: none !important;
+  border-radius: 10px !important;
+
+  color: #fff !important;
+
+  font-size: 14px !important;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(23, 111, 193, .22);
+
+  transition: all .2s ease;
+}
+
+.btn-abrir-tv:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 10px 24px rgba(23, 111, 193, .30);
+}
+
+/* =========================================================
+   ÁREA DA FILA
+   ========================================================= */
+
+.pacientes-fila {
+  margin: 26px 0 30px !important;
+  padding: 22px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f7fbfd,
+      #eef6fa
+    ) !important;
+
+  border: 1px solid #dbe8ef !important;
+
+  border-radius: 16px !important;
+
+  box-shadow:
+    0 5px 18px rgba(24, 67, 91, .05);
+}
+
+.pacientes-fila h3 {
+  margin: 0 0 18px !important;
+
+  color: #16384e !important;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.pacientes-fila h3 span {
+  color: #78909c !important;
+
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+/* =========================================================
+   ITEM DO PACIENTE
+   ========================================================= */
+
+.fila-item {
+  min-height: 66px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 10px !important;
+  padding: 12px 15px !important;
+
+  background: #fff !important;
+
+  border: 1px solid #e0e9ef !important;
+  border-radius: 11px !important;
+
+  box-shadow:
+    0 3px 10px rgba(28, 60, 80, .04);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+.fila-item:hover {
+  transform: translateY(-2px);
+
+  border-color: #b8dce8 !important;
+
+  box-shadow:
+    0 7px 20px rgba(24, 91, 120, .10);
+}
+
+.fila-item strong {
+  color: #183b51;
+
+  font-size: 15px !important;
+  font-weight: 700;
+}
+
+.fila-item small {
+  display: inline-block;
+
+  margin-top: 4px;
+
+  color: #7a8d99 !important;
+
+  font-size: 12px !important;
+}
+
+/* =========================================================
+   BOTÃO CHAMAR NA TV
+   ========================================================= */
+
+.btn-tv {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 38px;
+
+  margin-left: 15px !important;
+  padding: 0 15px !important;
+
+  background: linear-gradient(
+    135deg,
+    #008c9e,
+    #087f9c
+  ) !important;
+
+  color: #fff !important;
+
+  border: none !important;
+  border-radius: 8px !important;
+
+  font-size: 13px !important;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 13px rgba(0, 140, 158, .20);
+
+  transition: all .2s ease;
+}
+
+.btn-tv:hover {
+  background: linear-gradient(
+    135deg,
+    #007989,
+    #076f89
+  ) !important;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 18px rgba(0, 140, 158, .28);
+}
+
+/* =========================================================
+   BOTÃO ATUALIZAR
+   ========================================================= */
+
+.pacientes-fila button:not(.btn-tv) {
+  background: #526b7a !important;
+
+  padding: 9px 15px !important;
+
+  border-radius: 8px !important;
+
+  font-size: 13px !important;
+  font-weight: 600;
+
+  transition: all .2s ease;
+}
+
+.pacientes-fila button:not(.btn-tv):hover {
+  background: #344e5e !important;
+
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   SEPARADOR
+   ========================================================= */
+
+hr {
+  height: 1px;
+
+  margin: 30px 0;
+
+  border: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #dbe5ea,
+    transparent
+  );
+}
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.container > h3 {
+  margin: 0 0 18px;
+
+  color: #173b52;
+
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* Inputs, Select e Textarea */
+
+.container input,
+.container select,
+.container textarea {
+  width: 100%;
+
+  margin-bottom: 15px;
+  padding: 14px 16px;
+
+  background: #f8fbfc;
+
+  border: 1px solid #d6e2e8;
+  border-radius: 10px;
+
+  color: #203b4d;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+.container input,
+.container select {
+  height: 50px;
+}
+
+.container textarea {
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+.container input::placeholder,
+.container textarea::placeholder {
+  color: #91a2ad;
+}
+
+.container input:hover,
+.container select:hover,
+.container textarea:hover {
+  background: #fff;
+
+  border-color: #bdd1db;
+}
+
+.container input:focus,
+.container select:focus,
+.container textarea:focus {
+  background: #fff;
+
+  border-color: #16a3bd;
+
+  box-shadow:
+    0 0 0 4px rgba(22, 163, 189, .09);
+}
+
+/* =========================================================
+   RESULTADO DA TRIAGEM
+   ========================================================= */
+
+#resultado {
+  min-height: 20px;
+
+  margin: 4px 0 18px;
+
+  padding: 0;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  text-align: center;
+
+  transition: all .3s ease;
+}
+
+/* Quando o resultado receber a classe */
+
+#resultado.verde {
+  padding: 13px;
+
+  color: #147a4b;
+
+  background: #e8f8f0;
+
+  border: 1px solid #b9ead1;
+}
+
+#resultado.amarelo {
+  padding: 13px;
+
+  color: #9a6900;
+
+  background: #fff8df;
+
+  border: 1px solid #f1dc91;
+}
+
+#resultado.vermelho {
+  padding: 13px;
+
+  color: #b42323;
+
+  background: #fff0f0;
+
+  border: 1px solid #f2b8b8;
+
+  animation: alerta 1s ease-in-out infinite alternate;
+}
+
+/* =========================================================
+   BOTÃO SALVAR
+   ========================================================= */
+
+.container > button:last-child {
+  width: 100%;
+
+  height: 54px;
+
+  margin-top: 3px;
+
+  border: none;
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #087f9c 0%,
+      #0797b5 50%,
+      #176fc1 100%
+    );
+
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  letter-spacing: .2px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 9px 23px rgba(8, 127, 156, .23);
+
+  transition: all .2s ease;
+}
+
+.container > button:last-child:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.07);
+
+  box-shadow:
+    0 13px 28px rgba(8, 127, 156, .32);
+}
+
+.container > button:last-child:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   ANIMAÇÕES
+   ========================================================= */
+
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(.985);
   }
-  .pacientes-fila h3 {
-    margin-top: 0;
-    color: #333;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
-  .pacientes-fila h3 span {
-    font-size: 13px;
-    font-weight: normal;
-    color: #666;
+}
+
+@keyframes alerta {
+  from {
+    box-shadow: 0 0 0 rgba(220, 53, 69, 0);
   }
-  .fila-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: white;
-    border-radius: 6px;
-    padding: 10px 14px;
-    margin-bottom: 8px;
-    border: 1px solid #dce4ff;
+
+  to {
+    box-shadow: 0 0 15px rgba(220, 53, 69, .12);
   }
-  .fila-item strong { font-size: 15px; }
-  .fila-item small { color: #888; font-size: 12px; }
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  body {
+    padding: 20px 12px;
+  }
+
+  .container {
+    padding: 25px 20px;
+
+    border-radius: 17px;
+  }
+
+  .container > div:first-child {
+    flex-direction: column;
+
+    align-items: stretch !important;
+    gap: 15px;
+  }
+
+  .container h2 {
+    font-size: 21px;
+  }
+
   .btn-abrir-tv {
-    display: inline-block;
-    background: #17a2b8;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 5px;
-    font-size: 14px;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
+    width: 100%;
   }
-  .btn-abrir-tv:hover { background: #117a8b; }
+
+  .fila-item {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+  .btn-tv {
+    width: 100%;
+
+    margin-left: 0 !important;
+  }
+
+  .pacientes-fila h3 {
+    flex-direction: column;
+
+    align-items: flex-start !important;
+
+    gap: 7px;
+  }
+}
 </style>
 </head>
 
@@ -73,140 +595,4 @@
   </div>
 
   <!-- Fila de pacientes do Atendimento criada para mostrar quem pode ser chamado na TV -->
-  <div class="pacientes-fila">
-    <h3>
-      Pacientes Cadastrados no Atendimento
-      <span>Clique em "Chamar na TV" para chamar ao guichê</span>
-    </h3>
-    <div id="fila-pacientes">
-      <p style="color:#888; text-align:center;">Carregando...</p>
-    </div>
-    <button onclick="carregarPacientes()" style="margin-top:8px; background:#6c757d; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px;">🔄 Atualizar lista</button>
-  </div>
-
-  <hr>
-
-  <h3>Formulário de Triagem</h3>
-  <input id="nome" placeholder="Nome do paciente">
-
-  <select id="sintoma">
-    <option value="">Selecione o sintoma</option>
-    <option value="dor_leve">Dor leve</option>
-    <option value="resfriado">Resfriado</option>
-    <option value="coriza">Coriza</option>
-    <option value="tosse">Tosse</option>
-    <option value="febre">Febre</option>
-    <option value="vomito">Vômito</option>
-    <option value="diarreia">Diarreia</option>
-    <option value="falta_ar_moderada">Falta de ar moderada</option>
-    <option value="falta_ar_grave">Falta de ar grave</option>
-    <option value="infarto">Suspeita de infarto</option>
-    <option value="avc">Suspeita de AVC</option>
-    <option value="convulsao">Convulsão</option>
-    <option value="hemorragia">Hemorragia</option>
-  </select>
-
-  <input id="temp" type="number" placeholder="Temperatura">
-  <input id="alergia" placeholder="Alergias">
-  <textarea id="observacao" placeholder="Observações"></textarea>
-
-  <div id="resultado"></div>
-
-  <button onclick="salvar()">Salvar Triagem</button>
-
-</div>
-
-<script>
-
-function carregarPacientes() {
-  fetch("/pacientes")
-    .then(r => r.json())
-    .then(pacientes => {
-      const div = document.getElementById("fila-pacientes");
-
-      // Mostra apenas os com status "triagem"
-      const fila = pacientes.filter(p => p.status === "triagem");
-
-      if (fila.length === 0) {
-        div.innerHTML = "<p style='color:#888; text-align:center;'>Nenhum paciente aguardando.</p>";
-        return;
-      }
-
-      div.innerHTML = "";
-      fila.forEach(p => {
-        const item = document.createElement("div");
-        item.className = "fila-item";
-        item.innerHTML = `
-          <div>
-            <strong>${p.nome}</strong><br>
-            <small>CPF: ${p.cpf || "—"} | Tipo: ${p.tipo || "—"}</small>
-          </div>
-          <button class="btn-tv" onclick="chamarNaTV('${p.nome}')">📺 Chamar na TV</button>
-        `;
-        div.appendChild(item);
-      });
-    })
-    .catch(() => {
-      document.getElementById("fila-pacientes").innerHTML =
-        "<p style='color:red;'>Erro ao carregar pacientes.</p>";
-    });
-}
-
-// Função criada para enviar o nome do paciente para a TV quando ele for chamado no guichê.
-function chamarNaTV(nome) {
-  fetch("/tv/chamar", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      localTipo: "GUICHÊ",
-      localNumero: "01",
-      paciente: nome
-    })
-  })
-  .then(r => r.json())
-  .then(() => {
-    alert("✅ " + nome + " foi chamado na TV para o Guichê 01!");
-  });
-}
-
-function classificarRisco(sintoma, temperatura) {
-  const vermelhos = ["infarto","avc","convulsao","hemorragia","falta_ar_grave"];
-  const amarelos = ["febre","vomito","diarreia","falta_ar_moderada"];
-  if (temperatura >= 39) return "vermelho";
-  if (vermelhos.includes(sintoma)) return "vermelho";
-  if (amarelos.includes(sintoma)) return "amarelo";
-  return "verde";
-}
-
-function salvar() {
-  const nome = document.getElementById("nome").value;
-  const sintoma = document.getElementById("sintoma").value;
-  const temperatura = Number(document.getElementById("temp").value);
-  const alergia = document.getElementById("alergia").value;
-  const observacao = document.getElementById("observacao").value;
-  const risco = classificarRisco(sintoma, temperatura);
-
-  fetch("/triagem", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome, sintoma, temperatura, alergia, observacao, risco })
-  })
-  .then(r => r.json())
-  .then(data => {
-    const resultado = document.getElementById("resultado");
-    resultado.className = risco;
-    resultado.innerHTML = "Classificação: " + risco.toUpperCase();
-    alert("Triagem salva com sucesso!");
-  });
-}
-
-// Carrega a fila ao abrir a página
-carregarPacientes();
-
-// Atualiza a lista automaticamente a cada 10 segundos
-setInterval(carregarPacientes, 10000);
-
-</script>
-
-</body>
-</html>
+  <div class="pacientes-fila"
