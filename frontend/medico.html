@@ -67,6 +67,61 @@
   <div id="triagens"></div>
 
   <hr>
+<!-- Botão para dar alta e gerar o PDF -->
+  <button onclick="altaPaciente()">
+    🏥 Alta paciente
+  </button>
+
+  <!-- Botão para baixar/gerar o PDF novamente -->
+  <button onclick="baixarPDF()">
+    📄 Baixar PDF
+  </button>
+
+</div>
+
+
+<!-- Documento que será utilizado para gerar o PDF -->
+<div id="documentoPDF">
+
+  <h1>🩺 Documento de Alta do Paciente</h1>
+
+  <div class="linha">
+    <p><b>Paciente:</b> <span id="pdfPaciente"></span></p>
+  </div>
+
+  <div class="linha">
+    <p><b>Diagnóstico:</b> <span id="pdfDiagnostico"></span></p>
+  </div>
+
+  <div class="linha">
+    <p><b>Medicação:</b> <span id="pdfMedicacao"></span></p>
+  </div>
+
+  <div class="linha">
+    <p><b>Observações:</b></p>
+    <p id="pdfObs"></p>
+  </div>
+
+  <br>
+
+  <p>
+    <b>Data:</b>
+    <span id="pdfData"></span>
+  </p>
+
+  <br><br>
+
+  <p>________________________________________</p>
+  <p>Assinatura do responsável</p>
+
+</div>
+
+
+<script>
+
+let triagensCarregadas = [];
+
+
 
   <h3>Consulta</h3>
 
