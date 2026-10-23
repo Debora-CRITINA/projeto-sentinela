@@ -1,151 +1,111 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const cors = require("cors");
 
-const app = express();
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Hospitalar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
 
-app.use(express.json());
-app.use(cors());
+<body>
 
-app.use(express.static(path.join(__dirname, "../frontend")));
+  <div class="container">
+    <h2>🏥 Sistema Hospitalar</h2>
 
-const DB_FILE = path.join(__dirname, "db.json");
+    <form id="formLogin">
+      <input
+        id="usuario"
+        name="usuario"
+        type="text"
+        placeholder="Usuário"
+        autocomplete="username"
+        required
+      >
 
-function readDB() {
-  if (!fs.existsSync(DB_FILE)) {
-    return {
-      usuarios: [],
-      pacientes: [],
-      triagens: [],
-      consultas: []
-    };
-  }
+      <input
+        id="senha"
+        name="senha"
+        type="password"
+        placeholder="Senha"
+        autocomplete="current-password"
+        required
+      >
 
-  return JSON.parse(fs.readFileSync(DB_FILE));
-}
+      <button type="submit" id="botaoEntrar">Entrar</button>
 
-function writeDB(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-}
+      <p id="mensagem" role="alert"></p>
+    </form>
+  </div>
 
-// LOGIN
-app.post("/login", (req, res) => {
-  const db = readDB();
+  <script>
+    const formLogin = document.getElementById("formLogin");
+    const campoUsuario = document.getElementById("usuario");
+    const campoSenha = document.getElementById("senha");
+    const botaoEntrar = document.getElementById("botaoEntrar");
+    const mensagem = document.getElementById("mensagem");
 
-  const user = db.usuarios.find(u =>
-    u.usuario === req.body.usuario &&
-    u.senha === req.body.senha
-  );
+    formLogin.addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-  if (!user) {
-    return res.status(401).json({
-      erro: "Login inválido"
+      const usuario = campoUsuario.value.trim();
+      const senha = campoSenha.value;
+
+      if (!usuario || !senha) {
+        mensagem.textContent = "Preencha o usuário e a senha.";
+        return;
+      }
+
+      botaoEntrar.disabled = true;
+      mensagem.textContent = "Verificando acesso...";
+
+      try {
+        const resposta = await fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            usuario: usuario,
+            senha: senha
+          })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+          throw new Error(dados.erro || "Usuário ou senha inválidos.");
+        }
+
+        mensagem.textContent = "Login realizado.";
+
+        switch (dados.tipo) {
+          case "triagem":
+            window.location.href = "triagem.html";
+            break;
+
+          case "medico":
+            window.location.href = "medica.html";
+            break;
+
+          case "atendimento":
+            window.location.href = "atendimento.html";
+            break;
+
+          default:
+            mensagem.textContent =
+              "Login realizado, mas o tipo de usuário não possui uma página configurada.";
+            botaoEntrar.disabled = false;
+        }
+
+      } catch (erro) {
+        mensagem.textContent =
+          erro.message || "Não foi possível conectar ao servidor.";
+
+        botaoEntrar.disabled = false;
+      }
     });
-  }
+  </script>
 
-  res.json(user);
-});
-
-// ATENDIMENTO
-app.post("/atendimento", (req, res) => {
-  const db = readDB();
-
-  const paciente = {
-    id: Date.now(),
-    nome: req.body.nome,
-    cpf: req.body.cpf,
-    tipo: req.body.tipo,
-    status: "triagem",
-    createdAt: new Date()
-  };
-
-  db.pacientes.push(paciente);
-  writeDB(db);
-
-  res.json(paciente);
-});
-
-// TRIAGEM
-app.post("/triagem", (req, res) => {
-  const db = readDB();
-
-  let risco = req.body.risco;
-
-  if (req.body.temperatura >= 39) {
-    risco = "vermelho";
-  } else if (req.body.temperatura >= 38) {
-    risco = "amarelo";
-  } else if (!risco) {
-    risco = "verde";
-  }
-
-  const triagem = {
-    id: Date.now(),
-    nome: req.body.nome,
-    sintoma: req.body.sintoma,
-    temperatura: req.body.temperatura,
-    alergia: req.body.alergia,
-    observacao: req.body.observacao,
-    risco,
-    status: "aguardando_medico",
-    createdAt: new Date()
-  };
-
-  db.triagens.push(triagem);
-  writeDB(db);
-
-  res.json(triagem);
-});
-
-// LISTAR TRIAGENS
-app.get("/triagens", (req, res) => {
-  const db = readDB();
-  res.json(db.triagens);
-});
-
-// IMPLEMENTADO: rota com lista fixa de medicações
-// A lógica da TV foi implementada nas páginas de triagem, médico e na tela da TV,
-// com o backend responsável por receber e retornar as chamadas em tempo real.
-app.get("/lista-medicacoes", (req, res) => {
-  res.json([
-    "Dipirona",
-    "Paracetamol",
-    "Ibuprofeno",
-    "Amoxicilina",
-    "Azitromicina",
-    "Loratadina",
-    "Omeprazol",
-    "Buscopan",
-    "Dramin",
-    "Soro fisiológico"
-  ]);
-});
-
-// CONSULTA
-app.post("/consulta", (req, res) => {
-  const db = readDB();
-
-  const consulta = {
-    id: Date.now(),
-    paciente: req.body.paciente,
-    diagnostico: req.body.diagnostico,
-    medicacao: req.body.medicacao,
-    obs: req.body.obs,
-    createdAt: new Date()
-  };
-
-  db.consultas.push(consulta);
-  writeDB(db);
-
-  res.json(consulta);
-});
-
-// MEDICAÇÕES
-app.get("/medicacoes", (req, res) => {
-  const db = readDB();
-  res.json(db.consultas);
-});
-
-// START
-module.exports = app;
+</body>
+</html>
